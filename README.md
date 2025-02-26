@@ -78,5 +78,5 @@ Pull requests are welcome! Please open an issue first to discuss any changes.
 This project is licensed under the MIT License .
 
 ---
-🚀 Developed with ❤️ using **Spring Boot & PostgreSQL**
+🚀 Developed by **Shreyansh** using **Spring Boot & PostgreSQL**
 
