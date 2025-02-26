@@ -47,8 +47,8 @@ The service uses the following tables:
 ### **2️⃣ Configure Environment Variables**
 Create a `.env` file in the root directory and add the following:
 ```properties
-SPRING_DATASOURCE_URL=jdbc:postgresql://ep-fragrant-sound-a1cebekc-pooler.ap-southeast-1.aws.neon.tech/library?sslmode=require
-SPRING_DATASOURCE_USERNAME=library_owner
+SPRING_DATASOURCE_URL=jdbc:your_database_url
+SPRING_DATASOURCE_USERNAME=your_user_name
 SPRING_DATASOURCE_PASSWORD=your_secure_password
 SPRING_DATASOURCE_DRIVER-CLASS-NAME=org.postgresql.Driver
 ```
