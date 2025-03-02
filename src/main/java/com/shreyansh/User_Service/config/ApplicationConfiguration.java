@@ -6,17 +6,22 @@ import org.springframework.boot.web.servlet.server.CookieSameSiteSupplier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
-import org.springframework.security.web.csrf.CsrfTokenRequestHandler;
-import org.springframework.security.web.csrf.XorCsrfTokenRequestAttributeHandler;
+import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
@@ -24,13 +29,19 @@ import java.util.Arrays;
 import java.util.Collections;
 
 @Configuration
+@EnableWebSecurity
 public class ApplicationConfiguration {
     @Autowired
     private JWTTokenValidator jwtTokenValidator;
+    @Autowired
+    private RateLimitingFilter rateLimitingFilter;
+    @Autowired
+    UserDetailsService userDetailsService;
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        CsrfTokenRequestHandler requestHandler = new XorCsrfTokenRequestAttributeHandler();
+        CsrfTokenRequestAttributeHandler requestHandler = new CsrfTokenRequestAttributeHandler();
+        requestHandler.setCsrfRequestAttributeName("_csrf");
         return http.sessionManagement(
                 management -> management.sessionCreationPolicy(
                         SessionCreationPolicy.STATELESS))
@@ -44,15 +55,16 @@ public class ApplicationConfiguration {
                                 .requestMatchers(HttpMethod.DELETE, "/api/**").authenticated()
                                 .anyRequest().permitAll())
                 .addFilterBefore(jwtTokenValidator, BasicAuthenticationFilter.class)
+                .addFilterBefore(rateLimitingFilter, jwtTokenValidator.getClass())
                 .csrf(csrf -> csrf
-                    .csrfTokenRepository(csrfTokenRepository())
-                    .csrfTokenRequestHandler(requestHandler)
-                    .ignoringRequestMatchers("/auth/**"))
+                        .csrfTokenRepository(csrfTokenRepository())
+                        .csrfTokenRequestHandler(requestHandler)
+                        .ignoringRequestMatchers("/auth/**"))
                 .cors(
                         cors -> cors.configurationSource(
                                 corsConfigurationSource()))
                 .httpBasic(Customizer.withDefaults())
-                .formLogin(Customizer.withDefaults())
+
                 .build();
     }
 
@@ -74,7 +86,20 @@ public class ApplicationConfiguration {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder(12); 
+    }
+
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setPasswordEncoder(passwordEncoder());
+        provider.setUserDetailsService(userDetailsService);
+        return provider;
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
     }
 
     @Bean
@@ -85,13 +110,13 @@ public class ApplicationConfiguration {
         repository.setCookieCustomizer(cookie -> cookie
                 .path("/")
                 .secure(true)
-                .sameSite("None")
-                .httpOnly(true));
+                .sameSite("Lax")
+                .httpOnly(false));
         return repository;
     }
 
     @Bean
     public CookieSameSiteSupplier sameSiteSupplier() {
-        return CookieSameSiteSupplier.ofNone();
+        return CookieSameSiteSupplier.ofLax();
     }
 }
