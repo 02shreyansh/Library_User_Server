@@ -1,9 +1,7 @@
 package com.shreyansh.User_Service.controller;
 
-import com.shreyansh.User_Service.modal.User;
+import com.shreyansh.User_Service.dto.UserDTO;
 import com.shreyansh.User_Service.service.UserServiceImplementation;
-
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +13,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Enumeration;
 import java.util.List;
 
 @RestController
@@ -24,51 +20,27 @@ import java.util.List;
 public class userController {
     @Autowired
     private UserServiceImplementation userService;
+
     @GetMapping("/profile")
-    public ResponseEntity<User> getUserProfile(@CookieValue("token") String jwt){
+    public ResponseEntity<UserDTO> getUserProfile(@CookieValue("token") String jwt) {
 
-        User user=userService.getUserProfile(jwt);
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        UserDTO userDTO = userService.getUserProfile(jwt);
+        return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
+
     @GetMapping()
-    public ResponseEntity<List<User>> getUsers(){
+    public ResponseEntity<List<UserDTO>> getUsers() {
 
-        List<User> users=userService.getAllUsers();
-        return new ResponseEntity<>(users,HttpStatus.OK);
+        List<UserDTO> userDTOs = userService.getAllUsers();
+        return new ResponseEntity<>(userDTOs, HttpStatus.OK);
     }
+
     @DeleteMapping("/user")
-    public ResponseEntity<String> deleteUser(HttpServletRequest request){
-        
-        // 1. Check CSRF token from request attribute
+    public ResponseEntity<String> deleteUser(HttpServletRequest request) {
         CsrfToken csrfToken = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
-        if (csrfToken != null) {
-            System.out.println("Expected CSRF Token: " + csrfToken.getToken());
-            System.out.println("Expected Header Name: " + csrfToken.getHeaderName());
-            System.out.println("Actual Header Value: " + request.getHeader(csrfToken.getHeaderName()));
-        } else {
-            System.out.println("No CSRF token found in request attributes!");
+        if (csrfToken==null) {
+            throw new Error("CSRF TOKEN absent");
         }
-        
-        // 2. Print all headers
-        System.out.println("--- All Request Headers ---");
-        Enumeration<String> headerNames = request.getHeaderNames();
-        while (headerNames.hasMoreElements()) {
-            String headerName = headerNames.nextElement();
-            System.out.println(headerName + ": " + request.getHeader(headerName));
-        }
-        
-        // 3. Print all cookies
-        System.out.println("--- All Request Cookies ---");
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                System.out.println(cookie.getName() + ": " + cookie.getValue());
-            }
-        } else {
-            System.out.println("No cookies found in request");
-        }
-        
-        // Actual delete logic
         userService.deleteUser();
         return new ResponseEntity<>("User Deleted", HttpStatus.OK);
     }

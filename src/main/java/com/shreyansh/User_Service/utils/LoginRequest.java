@@ -1,4 +1,4 @@
-package com.shreyansh.User_Service.request;
+package com.shreyansh.User_Service.utils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

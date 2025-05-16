@@ -1,4 +1,4 @@
-package com.shreyansh.User_Service.config;
+package com.shreyansh.User_Service.utils.Security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,10 +15,10 @@ public class RedisConfig {
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
         RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(
-            "redis-13912.crce182.ap-south-1-1.ec2.redns.redis-cloud.com", 13912
+            "redis-18137.c239.us-east-1-2.ec2.redns.redis-cloud.com", 18137
         );
         config.setUsername("default");
-        config.setPassword("agFp2a0O7OFiVouuxRZizNIjYd4UI9Yz");
+        config.setPassword("iHjyRvjXnddu1cgj1JOlr2XcNtsrugnS");
 
         return new LettuceConnectionFactory(config);
     }

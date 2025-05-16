@@ -1,4 +1,4 @@
-package com.shreyansh.User_Service.config;
+package com.shreyansh.User_Service.utils.Security;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +24,8 @@ import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+
+
 
 import java.util.Arrays;
 import java.util.Collections;

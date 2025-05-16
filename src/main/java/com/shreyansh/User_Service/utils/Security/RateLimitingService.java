@@ -1,4 +1,4 @@
-package com.shreyansh.User_Service.config;
+package com.shreyansh.User_Service.utils.Security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;

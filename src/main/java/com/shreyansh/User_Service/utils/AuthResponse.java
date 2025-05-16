@@ -1,4 +1,4 @@
-package com.shreyansh.User_Service.response;
+package com.shreyansh.User_Service.utils;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

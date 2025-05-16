@@ -1,4 +1,4 @@
-package com.shreyansh.User_Service.config;
+package com.shreyansh.User_Service.utils.Security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

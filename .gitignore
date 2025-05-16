@@ -32,3 +32,10 @@ build/
 ### VS Code ###
 .vscode/
 .env
+/src/main/resources/keys
+
+### Keys ###
+ACCESS_PRIVATE.pem
+ACCESS_PUBLIC.pem
+REFRESH_PRIVATE.pem
+REFRESH_PUBLIC.pem

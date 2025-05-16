@@ -1,12 +1,12 @@
 package com.shreyansh.User_Service.controller;
 
-import com.shreyansh.User_Service.config.JWTProvider;
-import com.shreyansh.User_Service.config.RateLimitingService;
 import com.shreyansh.User_Service.modal.User;
 import com.shreyansh.User_Service.repository.UserRepo;
-import com.shreyansh.User_Service.request.LoginRequest;
-import com.shreyansh.User_Service.response.AuthResponse;
 import com.shreyansh.User_Service.service.CustomerUserService;
+import com.shreyansh.User_Service.utils.AuthResponse;
+import com.shreyansh.User_Service.utils.LoginRequest;
+import com.shreyansh.User_Service.utils.Security.JWTProvider;
+import com.shreyansh.User_Service.utils.Security.RateLimitingService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -53,10 +53,19 @@ public class AuthController {
         String password = user.getPassword();
         String fullName = user.getFull_name();
         Long universityId = user.getUniversity_id();
-
+        User isUniversityExist = userRepo.findByUniversityId(universityId);
         User isEmailExist = userRepo.findByEmail(email);
         if (isEmailExist != null) {
-            throw new Exception("Email already exist");
+            AuthResponse authResponse = new AuthResponse();
+            authResponse.setMessage("Email already exists");
+            authResponse.setStatus(false);
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(authResponse);
+        }
+        if(isUniversityExist!=null){
+            AuthResponse authResponse = new AuthResponse();
+            authResponse.setMessage("University Id already exists");
+            authResponse.setStatus(false);
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(authResponse);
         }
         User createdUser = new User();
         createdUser.setEmail(email);
