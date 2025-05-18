@@ -1,8 +1,11 @@
 package com.shreyansh.User_Service.dto;
+
 import java.time.Instant;
-import com.shreyansh.User_Service.modal.User;
-import com.shreyansh.User_Service.modal.UserRole;
-import com.shreyansh.User_Service.modal.UserStatus;
+
+import com.shreyansh.User_Service.db.User;
+import com.shreyansh.User_Service.db.UserRole;
+import com.shreyansh.User_Service.db.UserStatus;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,24 +16,41 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDTO {
-    private String id;
-    private String full_name;
+    private Long id;
+    private String firstName;
+    private String lastName;
     private String email;
-    private Long university_id;
+    private String phoneNumber;
+    private String companyName;
+    private String profilePicture;
     private UserStatus status;
-    private UserRole userRole;
-    private Instant lastActivityDate;
+    private Boolean isVerified;
+    private Boolean isActive;
+    private Boolean isEmailVerified;
+    private Boolean isPhoneVerified;
+    private UserRole role;
+    private Instant emailVerifiedAt;
+    private Instant phoneVerifiedAt;
     private Instant createdAt;
+    private Instant updatedAt;
 
     public UserDTO(User user) {
         this.id = user.getId();
-        this.full_name = user.getFull_name();
+        this.firstName = user.getFirstName();
+        this.lastName = user.getLastName();
         this.email = user.getEmail();
-        this.university_id = user.getUniversity_id();
+        this.phoneNumber = user.getPhoneNumber();
+        this.companyName = user.getCompanyName();
+        this.profilePicture = user.getProfilePicture();
         this.status = user.getStatus();
-        this.userRole = user.getUserRole();
-        this.lastActivityDate = user.getLastActivityDate();
+        this.isVerified = user.getIsVerified();
+        this.isActive = user.getIsActive();
+        this.isEmailVerified = user.getIsEmailVerified();
+        this.isPhoneVerified = user.getIsPhoneVerified();
+        this.role = user.getRole();
+        this.emailVerifiedAt = user.getEmailVerifiedAt();
+        this.phoneVerifiedAt = user.getPhoneVerifiedAt();
         this.createdAt = user.getCreatedAt();
+        this.updatedAt = user.getUpdatedAt();
     }
-
 }

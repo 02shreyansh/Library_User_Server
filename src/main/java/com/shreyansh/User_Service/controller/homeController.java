@@ -28,7 +28,6 @@ public class homeController {
         } else {
             response.put("error", "CSRF token not available");
         }
-        
         return ResponseEntity.ok(response);
     }
 

@@ -1,6 +1,6 @@
 package com.shreyansh.User_Service.controller;
 
-import com.shreyansh.User_Service.modal.User;
+import com.shreyansh.User_Service.db.User;
 import com.shreyansh.User_Service.repository.UserRepo;
 import com.shreyansh.User_Service.service.CustomerUserService;
 import com.shreyansh.User_Service.utils.AuthResponse;
@@ -51,9 +51,8 @@ public class AuthController {
             HttpServletResponse response) throws Exception {
         String email = user.getEmail();
         String password = user.getPassword();
-        String fullName = user.getFull_name();
-        Long universityId = user.getUniversity_id();
-        User isUniversityExist = userRepo.findByUniversityId(universityId);
+        String fullName = user.getFirstName();
+        
         User isEmailExist = userRepo.findByEmail(email);
         if (isEmailExist != null) {
             AuthResponse authResponse = new AuthResponse();
@@ -61,16 +60,9 @@ public class AuthController {
             authResponse.setStatus(false);
             return ResponseEntity.status(HttpStatus.CONFLICT).body(authResponse);
         }
-        if(isUniversityExist!=null){
-            AuthResponse authResponse = new AuthResponse();
-            authResponse.setMessage("University Id already exists");
-            authResponse.setStatus(false);
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(authResponse);
-        }
         User createdUser = new User();
         createdUser.setEmail(email);
-        createdUser.setFull_name(fullName);
-        createdUser.setUniversity_id(universityId);
+        createdUser.setFirstName(fullName);
         createdUser.setPassword(encoder.encode(password));
         userRepo.save(createdUser);
         Authentication authentication = new UsernamePasswordAuthenticationToken(email, password);

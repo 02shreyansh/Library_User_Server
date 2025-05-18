@@ -15,15 +15,7 @@ import java.util.Base64;
 @Configuration
 @Component
 public class Connect {
-    @Value("${spring.datasource.url}")
-    private String databaseUrl;
-
-    @Value("${spring.datasource.username}")
-    private String databaseUsername;
-
-    @Value("${spring.datasource.password}")
-    private String databasePassword;
-
+    
     @Value("${jwt.access.private.key}")
     private String accessPrivateKeyString;
 
@@ -77,19 +69,6 @@ public class Connect {
     private String extractBase64FromPEM(String pemKey) {
         return pemKey.replaceAll("-----(BEGIN|END)\\s+(EC\\s+PRIVATE|PUBLIC)\\s+KEY-----", "")
                      .replaceAll("\\s+", "");
-    }
-
-    // Getters
-    public String getDatabaseUrl() {
-        return databaseUrl;
-    }
-
-    public String getDatabaseUsername() {
-        return databaseUsername;
-    }
-
-    public String getDatabasePassword() {
-        return databasePassword;
     }
 
     public ECPrivateKey getAccessPrivateKey() {

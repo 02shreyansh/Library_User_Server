@@ -1,7 +1,7 @@
 package com.shreyansh.User_Service.service;
 
-import com.shreyansh.User_Service.modal.User;
-import com.shreyansh.User_Service.modal.UserPrincipal;
+import com.shreyansh.User_Service.db.User;
+import com.shreyansh.User_Service.db.UserPrincipal;
 import com.shreyansh.User_Service.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
